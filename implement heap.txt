@@ -1,0 +1,268 @@
+Binary Heap Test
+ 
+ 
+Enter size of Binary heap
+10
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+1
+Enter integer element to insert
+24
+ 
+Heap = 24
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+1
+Enter integer element to insert
+6
+ 
+Heap = 6 24
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+1
+Enter integer element to insert
+28
+ 
+Heap = 6 24 28
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+1
+Enter integer element to insert
+5
+ 
+Heap = 5 6 28 24
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+1
+Enter integer element to insert
+63
+ 
+Heap = 5 6 28 24 63
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+1
+Enter integer element to insert
+19
+ 
+Heap = 5 6 19 24 63 28
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+1
+Enter integer element to insert
+94
+ 
+Heap = 5 6 19 24 63 28 94
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+2
+Min Element : 5
+ 
+Heap = 6 24 19 94 63 28
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+2
+Min Element : 6
+ 
+Heap = 19 24 28 94 63
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+2
+Min Element : 19
+ 
+Heap = 24 63 28 94
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+2
+Min Element : 24
+ 
+Heap = 28 63 94
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+2
+Min Element : 28
+ 
+Heap = 63 94
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+2
+Min Element : 63
+ 
+Heap = 94
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+2
+Min Element : 94
+ 
+Heap =
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+2
+Underflow Exception
+ 
+Heap =
+ 
+Do you want to continue (Type y or n)
+ 
+y
+ 
+Binary Heap Operations
+ 
+1. insert
+2. delete min
+3. check full
+4. check empty
+5. clear
+4
+Empty status = true
+ 
+Heap =
+ 
+Do you want to continue (Type y or n)
+ 
+n
