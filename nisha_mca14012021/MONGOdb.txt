@@ -1,0 +1,258 @@
+
+public class Tree {
+
+	@Id
+	private String id;
+
+	private String name;
+
+	private String category;
+
+	private int age;
+
+	public Tree(String id, String name, int age) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	@Override
+	public String toString() {
+		return "Person [id=" + id + ", name=" + name + ", age=" + age
+				+ ", category=" + category + "]";
+	}
+}
+Step2: Create a simple Interface.
+
+Created a simple interface with CRUD methods.
+
+package com.orangeslate.naturestore.repository;
+
+import java.util.List;
+
+import com.mongodb.WriteResult;
+
+public interface Repository<T> {
+
+	public List<T> getAllObjects();
+
+	public void saveObject(T object);
+
+	public T getObject(String id);
+
+	public WriteResult updateObject(String id, String name);
+
+	public void deleteObject(String id);
+
+	public void createCollection();
+
+	public void dropCollection();
+}
+Step 3: Create an implementation class specifically for Tree domain object. It also initializes the MongoDB Collections.
+
+package com.orangeslate.naturestore.repository;
+
+import java.util.List;
+
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+
+import com.mongodb.WriteResult;
+import com.orangeslate.naturestore.domain.Tree;
+
+public class NatureRepositoryImpl implements Repository<Tree> {
+
+	MongoTemplate mongoTemplate;
+
+	public void setMongoTemplate(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
+
+	/**
+	 * Get all trees.
+	 */
+	public List<Tree> getAllObjects() {
+		return mongoTemplate.findAll(Tree.class);
+	}
+
+	/**
+	 * Saves a {@link Tree}.
+	 */
+	public void saveObject(Tree tree) {
+		mongoTemplate.insert(tree);
+	}
+
+	/**
+	 * Gets a {@link Tree} for a particular id.
+	 */
+	public Tree getObject(String id) {
+		return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)),
+				Tree.class);
+	}
+
+	/**
+	 * Updates a {@link Tree} name for a particular id.
+	 */
+	public WriteResult updateObject(String id, String name) {
+		return mongoTemplate.updateFirst(
+				new Query(Criteria.where("id").is(id)),
+				Update.update("name", name), Tree.class);
+	}
+
+	/**
+	 * Delete a {@link Tree} for a particular id.
+	 */
+	public void deleteObject(String id) {
+		mongoTemplate
+				.remove(new Query(Criteria.where("id").is(id)), Tree.class);
+	}
+
+	/**
+	 * Create a {@link Tree} collection if the collection does not already
+	 * exists
+	 */
+	public void createCollection() {
+		if (!mongoTemplate.collectionExists(Tree.class)) {
+			mongoTemplate.createCollection(Tree.class);
+		}
+	}
+
+	/**
+	 * Drops the {@link Tree} collection if the collection does already exists
+	 */
+	public void dropCollection() {
+		if (mongoTemplate.collectionExists(Tree.class)) {
+			mongoTemplate.dropCollection(Tree.class);
+		}
+	}
+}
+Step 4: Creating Spring context.
+
+Declare all the spring beans and mongodb objects in Spring context file. Lets call it as applicationContext.xml. Note we are creating not created a database with name “nature” yet. MongoDB will create it once we saves our first data.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+
+
+http://www.springframework.org/schema/context
+
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="natureRepository"
+		class="com.orangeslate.naturestore.repository.NatureRepositoryImpl">
+		<property name="mongoTemplate" ref="mongoTemplate" />
+	</bean>
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongo" ref="mongo" />
+		<constructor-arg name="databaseName" value="nature" />
+	</bean>
+
+	<!-- Factory bean that creates the Mongo instance -->
+	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
+		<property name="host" value="localhost" />
+		<property name="port" value="27017" />
+	</bean>
+
+	<!-- Activate annotation configured components -->
+	<context:annotation-config />
+
+	<!-- Scan components for annotations within the configured package -->
+	<context:component-scan base-package="com.orangeslate.naturestore">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.context.annotation.Configuration" />
+	</context:component-scan>
+
+</beans>
+tep 5: Creating a Test class
+
+Here I have created a simple test class and initializing context inside using ClassPathXmlApplicationContext.
+
+package com.orangeslate.naturestore.test;
+
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.orangeslate.naturestore.domain.Tree;
+import com.orangeslate.naturestore.repository.NatureRepositoryImpl;
+import com.orangeslate.naturestore.repository.Repository;
+
+public class MongoTest {
+
+	public static void main(String[] args) {
+
+		ConfigurableApplicationContext context = new ClassPathXmlApplicationContext(
+				"classpath:/spring/applicationContext.xml");
+
+		Repository repository = context.getBean(NatureRepositoryImpl.class);
+
+		// cleanup collection before insertion
+		repository.dropCollection();
+
+		// create collection
+		repository.createCollection();
+
+		repository.saveObject(new Tree("1", "Apple Tree", 10));
+
+		System.out.println("1. " + repository.getAllObjects());
+
+		repository.saveObject(new Tree("2", "Orange Tree", 3));
+
+		System.out.println("2. " + repository.getAllObjects());
+
+		System.out.println("Tree with id 1" + repository.getObject("1"));
+
+		repository.updateObject("1", "Peach Tree");
+
+		System.out.println("3. " + repository.getAllObjects());
+
+		repository.deleteObject("2");
+
+		System.out.println("4. " + repository.getAllObjects());
+	}
+}
+Lets run it as Java application. We can see the below output. First method saves “Apple Tree” into the database. Second method saves “OrangeTree” also into the database. Third method demonstrates finding an object with its id. Fourth one updates an existing object name with “Peach Tree”. And at last; the last method deletes the second object from DB. 
+
+1. [Person [id=1, name=Apple Tree, age=10, category=null]]
+2. [Person [id=1, name=Apple Tree, age=10, category=null], Person [id=2, name=Orange Tree, age=3, category=null]]
+Tree with id 1Person [id=1, name=Apple Tree, age=10, category=null]
+3. [Person [id=1, name=Peach Tree, age=10, category=null], Person [id=2, name=Orange Tree, age=3, category=null]]
+4. [Person [id=1, name=Peach Tree, age=10, category=null]]

@@ -1,0 +1,125 @@
+proxies: [
+   {
+     context: '/app', // the context of the data service
+     host: 'localhost', // wherever the data service is running
+     port: 9090, // the port that the data service is running on
+     changeOrigin: true
+   }
+ ],
+
+livereload: {
+ options: {
+   open: true,
+
+   middleware: function (connect) {
+     var middlewares = [];
+
+     // Setup the proxy
+     middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
+
+     // Serve static files
+     middlewares.push(connect.static('.tmp'));
+     middlewares.push(connect().use(
+       '/bower_components',
+       connect.static('./bower_components')
+     ));
+     middlewares.push(connect().use(
+       '/app/styles',
+       connect.static('./app/styles')
+     ));
+     middlewares.push(connect.static(appConfig.app));
+
+     return middlewares;
+   }
+ }
+}, 
+Finally, we need to add a new dependency “’configureProxies:server” to the “serve” task:
+
+grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
+ if (target === 'dist') {
+   return grunt.task.run(['build', 'connect:dist:keepalive']);
+ }
+
+ grunt.task.run([
+   'clean:server',
+   'wiredep',
+   'concurrent:server',
+   'autoprefixer:server',
+   'configureProxies:server',
+   'connect:livereload',
+   'watch'
+ ]);
+});
+Upon restarting Grunt, you should notice the following lines in your logs indicating that the proxy is running:
+
+Running "autoprefixer:server" (autoprefixer) task
+File .tmp/styles/main.css created.
+
+Running "configureProxies:server" (configureProxies) task
+
+Running "connect:livereload" (connect) task
+Started connect web server on http://localhost:9000
+Creating a Sign-up Form
+
+yo angular:controller signup
+yo angular:view signup
+
+.config(function ($routeProvider) {
+ $routeProvider
+   .when('/', {
+     templateUrl: 'views/main.html',
+     controller: 'MainCtrl'
+   })
+   .when('/signup', {
+     templateUrl: 'views/signup.html',
+     controller: 'SignupCtrl'
+   })
+   .otherwise({
+     redirectTo: '/'
+   });
+<div class="collapse navbar-collapse" id="js-navbar-collapse">
+   <ul class="nav navbar-nav">
+     <li class="active"><a href="#/">Home</a></li>
+     <li><a ng-href="#/signup">Signup</a></li>
+   </ul>
+ </div>
+</div>
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+       <script src="scripts/app.js"></script>
+       <script src="scripts/controllers/main.js"></script>
+       <script src="scripts/controllers/signup.js"></script>
+<!-- endbuild -->
+</body>
+</html>
+Next, add a form to our “signup.html” file:
+
+<form name="signupForm" ng-submit="signup()" novalidate>
+ <div>
+   <label for="email">Email</label>
+   <input name="email" class="form-control" type="email" id="email" placeholder="Email"
+          ng-model="email">
+   </div>
+ <div>
+   <label for="password">Password</label>
+   <input name="password" class="form-control" type="password" id="password"
+          placeholder="Password" ng-model="password">
+
+ </div>
+ <button type="submit" class="btn btn-primary">Sign up!</button>
+</form>
+We need to make the form be processed by the Angular controller. It is worth noting that we do not need to specifically add the “ng-controller” attribute in our views, as our routing logic in “app.js” fires up a controller automatically before our view is loaded. All we have to do to wire this form up is have a proper “signup” function defined in $scope. This should be done in the “signup.js” file:
+
+angular.module('clientApp')
+   .controller('SignupCtrl', function ($scope, $http, $log) {
+     $scope.signup = function() {
+       var payload = {
+         email : $scope.email,
+         password : $scope.password
+       };
+
+       $http.post('app/signup', payload)
+           .success(function(data) {
+             $log.debug(data);
+           });
+     };
+   });
