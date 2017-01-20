@@ -1,268 +1,60 @@
-Binary Heap Test
- 
- 
-Enter size of Binary heap
-10
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-1
-Enter integer element to insert
-24
- 
-Heap = 24
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-1
-Enter integer element to insert
-6
- 
-Heap = 6 24
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-1
-Enter integer element to insert
-28
- 
-Heap = 6 24 28
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-1
-Enter integer element to insert
-5
- 
-Heap = 5 6 28 24
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-1
-Enter integer element to insert
-63
- 
-Heap = 5 6 28 24 63
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-1
-Enter integer element to insert
-19
- 
-Heap = 5 6 19 24 63 28
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-1
-Enter integer element to insert
-94
- 
-Heap = 5 6 19 24 63 28 94
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-2
-Min Element : 5
- 
-Heap = 6 24 19 94 63 28
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-2
-Min Element : 6
- 
-Heap = 19 24 28 94 63
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-2
-Min Element : 19
- 
-Heap = 24 63 28 94
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-2
-Min Element : 24
- 
-Heap = 28 63 94
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-2
-Min Element : 28
- 
-Heap = 63 94
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-2
-Min Element : 63
- 
-Heap = 94
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-2
-Min Element : 94
- 
-Heap =
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-2
-Underflow Exception
- 
-Heap =
- 
-Do you want to continue (Type y or n)
- 
-y
- 
-Binary Heap Operations
- 
-1. insert
-2. delete min
-3. check full
-4. check empty
-5. clear
-4
-Empty status = true
- 
-Heap =
- 
-Do you want to continue (Type y or n)
- 
-n
+#include<stdio.h>
+void heapsort(int[],int);
+void heapify(int[],int);
+void adjust(int[],int);
+main() {
+	int n,i,a[50];
+	system("clear");
+	printf("\nEnter the limit:");
+	scanf("%d",&n);
+	printf("\nEnter the elements:");
+	for (i=0;i<n;i++)
+	  scanf("%d",&a[i]);
+	heapsort(a,n);
+	printf("\nThe Sorted Elements Are:\n");
+	for (i=0;i<n;i++)
+	  printf("\t%d",a[i]);
+	printf("\n");
+}
+void heapsort(int a[],int n) {
+	int i,t;
+	heapify(a,n);
+	for (i=n-1;i>0;i--) {
+		t = a[0];
+		a[0] = a[i];
+		a[i] = t;
+		adjust(a,i);
+	}
+}
+void heapify(int a[],int n) {
+	int k,i,j,item;
+	for (k=1;k<n;k++) {
+		item = a[k];
+		i = k;
+		j = (i-1)/2;
+		while((i>0)&&(item>a[j])) {
+			a[i] = a[j];
+			i = j;
+			j = (i-1)/2;
+		}
+		a[i] = item;
+	}
+}
+void adjust(int a[],int n) {
+	int i,j,item;
+	j = 0;
+	item = a[j];
+	i = 2*j+1;
+	while(i<=n-1) {
+		if(i+1 <= n-1)
+		   if(a[i] <a[i+1])
+		    i++;
+		if(item<a[i]) {
+			a[j] = a[i];
+			j = i;
+			i = 2*j+1;
+		} else
+		   break;
+	}
+	a[j] = item;
+}
